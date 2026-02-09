@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="HelloWorldLib/HelloWorldLib.csproj" />
+  <Project Path="MasterApp/MasterApp.csproj" />
+  <Project Path="UserInputApp/UserInputApp.csproj" />
+</Solution>
