@@ -9,14 +9,21 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Views\" />
-    <Folder Include="Services\" />
+    <Folder Include="Data\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="seed-shopping.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+
+	<ItemGroup>
+		<None Include="Data\seed-shoppings.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+	
+  
+	<ItemGroup>
+	  <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+	</ItemGroup>
+
+
 
 </Project>

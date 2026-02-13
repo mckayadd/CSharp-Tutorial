@@ -2,7 +2,7 @@
 using System.Data;
 using System.Windows;
 
-namespace ShoppingHelper
+namespace ShoppingHelperToolkit
 {
     /// <summary>
     /// Interaction logic for App.xaml
