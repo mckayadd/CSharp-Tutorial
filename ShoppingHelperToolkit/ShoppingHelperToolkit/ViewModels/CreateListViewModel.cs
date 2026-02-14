@@ -7,99 +7,99 @@ namespace ShoppingHelperToolkit.ViewModels;
 
 public class CreateListViewModel : ObservableObject
 {
-    // We use a callback so this ViewModel can "save" without knowing about the other ViewModel directly.
-    private readonly Action<Shopping> _onSaveShopping;
+    private readonly PreviousShoppingsViewModel _previous;
 
     public ObservableCollection<ShoppingItem> CurrentItems { get; } = new();
 
-    private string _itemName = "";
-    public string ItemName
+    private string _newItemName = "";
+    public string NewItemName
     {
-        get => _itemName;
-        set
+        get => _newItemName;
+        set => SetProperty(ref _newItemName, value);
+    }
+
+    private string _newItemPrice = "";
+    public string NewItemPrice
+    {
+        get => _newItemPrice;
+        set => SetProperty(ref _newItemPrice, value);
+    }
+
+    public IRelayCommand AddItemCommand { get; }
+    public IRelayCommand SaveShoppingCommand { get; }
+    public IRelayCommand ClearCurrentCommand { get; }
+
+    public CreateListViewModel(PreviousShoppingsViewModel previous)
+    {
+        _previous = previous;
+
+        AddItemCommand = new RelayCommand(OnAddItem);
+        SaveShoppingCommand = new RelayCommand(OnSaveShopping);
+        ClearCurrentCommand = new RelayCommand(OnClearCurrent);
+    }
+
+    private void OnAddItem()
+    {
+        // 1) Validate name
+        if (string.IsNullOrWhiteSpace(NewItemName))
         {
-            SetProperty(ref _itemName, value);
-            AddItemCommand.NotifyCanExecuteChanged();
+            System.Windows.MessageBox.Show("Please enter an item name.");
+            return;
         }
-    }
 
-    private string _priceText = "";
-    public string PriceText
-    {
-        get => _priceText;
-        set
+        // 2) Validate & parse price
+        if (!decimal.TryParse(NewItemPrice, out decimal price))
         {
-            SetProperty(ref _priceText, value);
-            AddItemCommand.NotifyCanExecuteChanged();
+            System.Windows.MessageBox.Show("Please enter a valid price (example: 25 or 25.5).");
+            return;
         }
-    }
 
-    private string _statusMessage = "";
-    public string StatusMessage
-    {
-        get => _statusMessage;
-        set => SetProperty(ref _statusMessage, value);
-    }
+        if (price < 0)
+        {
+            System.Windows.MessageBox.Show("Price cannot be negative.");
+            return;
+        }
 
-    public RelayCommand AddItemCommand { get; }
-    public RelayCommand SaveShoppingCommand { get; }
-
-    public CreateListViewModel(Action<Shopping> onSaveShopping)
-    {
-        _onSaveShopping = onSaveShopping;
-
-        AddItemCommand = new RelayCommand(AddItem, CanAddItem);
-        SaveShoppingCommand = new RelayCommand(SaveShopping, CanSaveShopping);
-    }
-
-    private bool CanAddItem()
-    {
-        if (string.IsNullOrWhiteSpace(ItemName))
-            return false;
-
-        // Price must be a number >= 0
-        if (!decimal.TryParse(PriceText, out decimal p))
-            return false;
-
-        return p >= 0;
-    }
-
-    private void AddItem()
-    {
-        decimal price = decimal.Parse(PriceText);
-
+        // 3) Add to list
         CurrentItems.Add(new ShoppingItem
         {
-            Name = ItemName.Trim(),
+            Name = NewItemName.Trim(),
             Price = price
         });
 
-        // reset inputs
-        ItemName = "";
-        PriceText = "";
-        StatusMessage = "Item added.";
-
-        SaveShoppingCommand.NotifyCanExecuteChanged();
+        // 4) Clear inputs for next item
+        NewItemName = "";
+        NewItemPrice = "";
     }
 
-    private bool CanSaveShopping()
+    private void OnSaveShopping()
     {
-        return CurrentItems.Count > 0;
-    }
+        if (CurrentItems.Count == 0)
+        {
+            System.Windows.MessageBox.Show("Your current list is empty. Add items first.");
+            return;
+        }
 
-    private void SaveShopping()
-    {
+        // Create a new shopping session
         var shopping = new Shopping
         {
             Date = DateTime.Now,
             Items = CurrentItems.ToList()
         };
 
-        _onSaveShopping(shopping);
+        // Add it to the Previous tab (latest first)
+        _previous.AddShoppingOnTop(shopping);
 
+        // Clear current list
         CurrentItems.Clear();
-        StatusMessage = "Shopping saved.";
 
-        SaveShoppingCommand.NotifyCanExecuteChanged();
+        System.Windows.MessageBox.Show("Shopping saved to Previous Shoppings!");
+    }
+
+    private void OnClearCurrent()
+    {
+        CurrentItems.Clear();
+        NewItemName = "";
+        NewItemPrice = "";
     }
 }
