@@ -11,21 +11,59 @@
 
         <!-- Left side: list of shopping sessions -->
         <GroupBox Header="Previous shoppings">
-            <ListBox ItemsSource="{Binding Shoppings}"
+            <StackPanel>
+
+                <TextBlock Text="Price threshold:" />
+
+                <TextBox Text="{Binding PriceThreshold, UpdateSourceTrigger=PropertyChanged}"
+                         Width="120"
+                         Margin="5" />
+
+                <Button Content="Filter"
+                        Command="{Binding FilterCommand}"
+                        Margin="5"
+                        Width="120" />
+                <ListBox ItemsSource="{Binding Shoppings}"
                      SelectedItem="{Binding SelectedShopping}"
                      DisplayMemberPath="Date"/>
+            </StackPanel>
+            
         </GroupBox>
 
         <!-- Right side: items in selected shopping -->
-        <GroupBox Grid.Column="2" Header="Items">
-            <ListView ItemsSource="{Binding SelectedShopping.Items}">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Header="Item" DisplayMemberBinding="{Binding Name}" Width="220"/>
-                        <GridViewColumn Header="Price" DisplayMemberBinding="{Binding Price}" Width="120"/>
-                    </GridView>
-                </ListView.View>
-            </ListView>
+        <GroupBox Grid.Column="2" Header="Details">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="12"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Top: items in selected shopping -->
+                <GroupBox Header="Items in selected shopping">
+                    <ListView ItemsSource="{Binding SelectedShopping.Items}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Item" DisplayMemberBinding="{Binding Name}" Width="220"/>
+                                <GridViewColumn Header="Price" DisplayMemberBinding="{Binding Price}" Width="120"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </GroupBox>
+
+                <!-- Bottom: filtered items -->
+                <GroupBox Grid.Row="2" Header="Filtered items (Price &gt; threshold)">
+                    <ListView ItemsSource="{Binding FilteredItems}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Item" DisplayMemberBinding="{Binding Name}" Width="220"/>
+                                <GridViewColumn Header="Price" DisplayMemberBinding="{Binding Price}" Width="120"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </GroupBox>
+            </Grid>
         </GroupBox>
+
     </Grid>
 </UserControl>
