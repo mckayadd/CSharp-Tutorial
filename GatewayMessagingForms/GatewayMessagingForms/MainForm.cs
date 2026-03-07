@@ -4,70 +4,59 @@ namespace GatewayMessagingForms
 {
     public partial class MainForm : Form
     {
+
+        private CancellationTokenSource _cts;
         public MainForm()
         {
             InitializeComponent();
         }
 
-        private readonly object _statusLock = new object();
-        private bool _isSystemRunning = false;
-
-        [Browsable(false)] // Properties penceresinde görünmesini engeller
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // Designer'ın bunu kaydetmesini engeller
-        public bool IsSystemRunning
-        {
-            get 
-            { 
-                lock (_statusLock)
-                {
-                    return _isSystemRunning; 
-                }
-            }
-            set 
-            {
-                lock (_statusLock)
-                {
-                    _isSystemRunning = value; 
-                }
-            }
-        }
-
-
-
         private async void btnStartSystem_Click(object sender, EventArgs e)
         {
-            if (!IsSystemRunning)
-            {
-                IsSystemRunning = true;
-                btnStartSystem.Enabled = false;
-                btnEndSystem.Enabled = true;
-                AppendLog("System Initializing...", txtConnectorLog);
+            _cts = new CancellationTokenSource(); // create a new token source
 
-                // Start messaging
-                Task.Run(() => RunCameraComponent());
-            }
+            btnStartSystem.Enabled = false;
+            btnEndSystem.Enabled = true;
+            AppendLog("System Initializing...", txtConnectorLog);
+
+            // Start the background process and pass the token
+            Task.Run(() => RunCameraComponent(_cts.Token));
         }
 
         private async void btnEndSystem_Click(object sender, EventArgs e)
         {
-            IsSystemRunning = false;
+            _cts?.Cancel(); // Trigger immediate cancellation
+            
             btnStartSystem.Enabled = true;
             btnEndSystem.Enabled = false;
+            AppendLog("System Stopping. Cancellation Sent.", txtConnectorLog);
         }
 
         // --- COMPONENT A: Vision System ---
-        private void RunCameraComponent()
+        private void RunCameraComponent(CancellationToken token)
         {
             Random rnd = new Random();
-            while (IsSystemRunning)
+            try
             {
-                // Simulate part detection (double in millimeters)
-                double detectedPosMm = rnd.Next(50, 200) + rnd.NextDouble();
-                AppendLog($"[Camera] Part detected at: {detectedPosMm:F2} mm", txtCameraLog);
-                // Send raw data to the Connector
-                GatewayConnector(detectedPosMm);
+                // Check both property and token 
+                while (!token.IsCancellationRequested)
+                {
+                    // Simulate part detection (double in millimeters)
+                    double detectedPosMm = rnd.Next(50, 200) + rnd.NextDouble();
+                    AppendLog($"[Camera] Part detected at: {detectedPosMm:F2} mm", txtCameraLog);
+                    // Send raw data to the Connector
+                    GatewayConnector(detectedPosMm);
 
-                Thread.Sleep(4000); // Wait for next scan cycle
+                    Thread.Sleep(4000); // Wait for next scan cycle
+                }
+            }
+            catch (TaskCanceledException)
+            {
+                // Expected when btnEndSystem is clicked
+            }
+            finally
+            {
+                AppendLog("[Camera] Thread Gracefully Terminated", txtCameraLog);
             }
         }
 
