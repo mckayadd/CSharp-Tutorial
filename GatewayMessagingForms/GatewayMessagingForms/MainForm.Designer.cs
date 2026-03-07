@@ -35,6 +35,7 @@
             grpConnector = new GroupBox();
             txtConnectorLog = new TextBox();
             btnStartSystem = new Button();
+            btnEndSystem = new Button();
             grpCamera.SuspendLayout();
             grpRobot.SuspendLayout();
             grpConnector.SuspendLayout();
@@ -48,7 +49,7 @@
             grpCamera.Size = new Size(308, 294);
             grpCamera.TabIndex = 0;
             grpCamera.TabStop = false;
-            grpCamera.Text = "groupBox1";
+            grpCamera.Text = "Camera Component";
             // 
             // txtCameraLog
             // 
@@ -68,7 +69,7 @@
             grpRobot.Size = new Size(325, 294);
             grpRobot.TabIndex = 1;
             grpRobot.TabStop = false;
-            grpRobot.Text = "groupBox1";
+            grpRobot.Text = "Controller Component";
             // 
             // txtRobotLog
             // 
@@ -88,7 +89,7 @@
             grpConnector.Size = new Size(371, 185);
             grpConnector.TabIndex = 2;
             grpConnector.TabStop = false;
-            grpConnector.Text = "groupBox1";
+            grpConnector.Text = "Connector";
             // 
             // txtConnectorLog
             // 
@@ -105,17 +106,30 @@
             btnStartSystem.Font = new Font("Segoe UI", 12F);
             btnStartSystem.Location = new Point(479, 275);
             btnStartSystem.Name = "btnStartSystem";
-            btnStartSystem.Size = new Size(265, 41);
+            btnStartSystem.Size = new Size(128, 41);
             btnStartSystem.TabIndex = 3;
             btnStartSystem.Text = "Start";
             btnStartSystem.UseVisualStyleBackColor = true;
             btnStartSystem.Click += btnStartSystem_Click;
+            // 
+            // btnEndSystem
+            // 
+            btnEndSystem.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btnEndSystem.Location = new Point(645, 275);
+            btnEndSystem.Name = "btnEndSystem";
+            btnEndSystem.Size = new Size(116, 41);
+            btnEndSystem.Enabled = false;
+            btnEndSystem.TabIndex = 4;
+            btnEndSystem.Text = "End";
+            btnEndSystem.UseVisualStyleBackColor = true;
+            btnEndSystem.Click += btnEndSystem_Click;
             // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1218, 392);
+            Controls.Add(btnEndSystem);
             Controls.Add(btnStartSystem);
             Controls.Add(grpConnector);
             Controls.Add(grpRobot);
@@ -140,5 +154,6 @@
         private GroupBox grpConnector;
         private TextBox txtConnectorLog;
         private Button btnStartSystem;
+        private Button btnEndSystem;
     }
 }

@@ -1,3 +1,5 @@
+using System.ComponentModel;
+
 namespace GatewayMessagingForms
 {
     public partial class MainForm : Form
@@ -11,22 +13,57 @@ namespace GatewayMessagingForms
             InitializeComponent();
         }
 
+        private readonly object _statusLock = new object();
+        private bool _isSystemRunning = false;
+
+        [Browsable(false)] // Properties penceresinde görünmesini engeller
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)] // Designer'ın bunu kaydetmesini engeller
+        public bool IsSystemRunning
+        {
+            get 
+            { 
+                lock (_statusLock)
+                {
+                    return _isSystemRunning; 
+                }
+            }
+            set 
+            {
+                lock (_statusLock)
+                {
+                    _isSystemRunning = value; 
+                }
+            }
+        }
+
+
+
         private async void btnStartSystem_Click(object sender, EventArgs e)
         {
-            btnStartSystem.Enabled = false;
-            AppendLog("System Initializing...", txtConnectorLog);
+            if (!IsSystemRunning)
+            {
+                IsSystemRunning = true;
+                btnStartSystem.Enabled = false;
+                btnEndSystem.Enabled = true;
+                AppendLog("System Initializing...", txtConnectorLog);
 
-            // Start messaging
-            Task.Run(() => RunCameraComponent());
- 
+                // Start messaging
+                Task.Run(() => RunCameraComponent());
+            }
+        }
+
+        private async void btnEndSystem_Click(object sender, EventArgs e)
+        {
+            IsSystemRunning = false;
+            btnStartSystem.Enabled = true;
+            btnEndSystem.Enabled = false;
         }
 
         // --- COMPONENT A: Vision System ---
-        private void RunCameraComponent() 
-        { 
+        private void RunCameraComponent()
+        {
             Random rnd = new Random();
-            int i = 0;
-            while (true)
+            while (IsSystemRunning)
             {
                 // Simulate part detection (double in millimeters)
                 double detectedPosMm = rnd.Next(50, 200) + rnd.NextDouble();
@@ -35,13 +72,11 @@ namespace GatewayMessagingForms
                 GatewayConnector(detectedPosMm);
 
                 Thread.Sleep(4000); // Wait for next scan cycle
-                //i++;
-                //if (i == 5) break;
             }
         }
 
         // --- THE CONNECTOR: Fieldbus Gateway (Data Translator) ---
-        private void GatewayConnector(object rawData) 
+        private void GatewayConnector(object rawData)
         {
             if (rawData is double mmValue)
             {
@@ -82,7 +117,9 @@ namespace GatewayMessagingForms
             // Check if we are on a background thread
             if (target.InvokeRequired)
             {
-                target.Invoke(new LogUpdateDelegate(AppendLog), message,  target);
+                //target.Invoke(new LogUpdateDelegate(AppendLog), message, target);
+                // with the below line, background thread doesn't have to wait for the UI
+                target.BeginInvoke(new LogUpdateDelegate(AppendLog), message, target); 
             }
             else
             {
@@ -91,6 +128,5 @@ namespace GatewayMessagingForms
                 target.ScrollToCaret(); // Auto-scroll to latest log
             }
         }
-
     }
 }
