@@ -4,10 +4,6 @@ namespace GatewayMessagingForms
 {
     public partial class MainForm : Form
     {
-
-        // Delegate for thread-safe UI updates
-        delegate void LogUpdateDelegate(string message, TextBox target);
-
         public MainForm()
         {
             InitializeComponent();
@@ -118,8 +114,9 @@ namespace GatewayMessagingForms
             if (target.InvokeRequired)
             {
                 //target.Invoke(new LogUpdateDelegate(AppendLog), message, target);
-                // with the below line, background thread doesn't have to wait for the UI
-                target.BeginInvoke(new LogUpdateDelegate(AppendLog), message, target); 
+                // Invoke vs. BeginInvoke: with the below line, background thread doesn't have to wait for the UI
+                // more modern to use new Action... instead of using LogUpdateDelegate
+                target.BeginInvoke(new Action(() => AppendLog(message, target))); 
             }
             else
             {
