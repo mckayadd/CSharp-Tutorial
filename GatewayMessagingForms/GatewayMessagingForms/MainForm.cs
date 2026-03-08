@@ -13,6 +13,12 @@ public partial class MainForm : Form
     public MainForm()
     {
         InitializeComponent();
+
+        // Grid settings
+        dgvLogs.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+        dgvLogs.ReadOnly = true; 
+        dgvLogs.RowHeadersVisible = false; 
+
         InitializeBusinessLogic();
     }
 
@@ -26,6 +32,7 @@ public partial class MainForm : Form
 
         // 2. Wire up Events
         _logger.OnLogRequest += (msg, cat) => AppendLog(msg, GetTargetTextBox(cat));
+        _logger.OnLogRequest += (msg, cat) => UpdateDatabaseGrid();
         _vision.OnDataCaptured += (mm) => _gateway.HandleData(mm);
         _robot.OnFeedbackReady += (status) =>
         {
@@ -73,4 +80,21 @@ public partial class MainForm : Form
             target.ScrollToCaret();
         }
     }
+
+    private void UpdateDatabaseGrid()
+    {
+        // DB okuma islemi asenkron bir Task icinde oldugu icin 
+        // Grid guncellemesini UI thread'ine Invoke ile guvenli gondermeliyiz
+        if (dgvLogs.InvokeRequired)
+        {
+            dgvLogs.BeginInvoke(new Action(UpdateDatabaseGrid));
+        }
+        else
+        {
+            // DatabaseManager'dan veriyi al ve Grid'e bagla
+            var dataTable = _logger.DbManager.GetRecentLogs(20);
+            dgvLogs.DataSource = dataTable;
+        }
+    }
+
 }

@@ -1,5 +1,5 @@
 ﻿using Microsoft.Data.Sqlite; // Yeni kütüphane
-using System.IO;
+using System.Data;
 
 public class DatabaseManager
 {
@@ -39,4 +39,25 @@ public class DatabaseManager
             }
         }
     }
+
+    public DataTable GetRecentLogs(int limit = 20)
+    {
+        using (var conn = new SqliteConnection(_connectionString))
+        {
+            conn.Open();
+            // En yeni kayıtları en üstte görmek için Id DESC (azalan) kullanıyoruz
+            string sql = $"SELECT Id, Timestamp, Category, Message FROM Logs ORDER BY Id DESC LIMIT {limit}";
+
+            using (var cmd = new SqliteCommand(sql, conn))
+            {
+                using (var reader = cmd.ExecuteReader())
+                {
+                    DataTable dt = new DataTable();
+                    dt.Load(reader);
+                    return dt;
+                }
+            }
+        }
+    }
+
 }

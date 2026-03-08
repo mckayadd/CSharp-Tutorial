@@ -36,9 +36,13 @@
             txtConnectorLog = new TextBox();
             btnStartSystem = new Button();
             btnEndSystem = new Button();
+            grpDb = new GroupBox();
+            dgvLogs = new DataGridView();
             grpCamera.SuspendLayout();
             grpRobot.SuspendLayout();
             grpConnector.SuspendLayout();
+            grpDb.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvLogs).BeginInit();
             SuspendLayout();
             // 
             // grpCamera
@@ -46,65 +50,68 @@
             grpCamera.Controls.Add(txtCameraLog);
             grpCamera.Location = new Point(49, 40);
             grpCamera.Name = "grpCamera";
-            grpCamera.Size = new Size(308, 294);
+            grpCamera.Size = new Size(412, 268);
             grpCamera.TabIndex = 0;
             grpCamera.TabStop = false;
             grpCamera.Text = "Camera Component";
             // 
             // txtCameraLog
             // 
+            txtCameraLog.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             txtCameraLog.Location = new Point(19, 33);
             txtCameraLog.Multiline = true;
             txtCameraLog.Name = "txtCameraLog";
             txtCameraLog.ReadOnly = true;
             txtCameraLog.ScrollBars = ScrollBars.Vertical;
-            txtCameraLog.Size = new Size(267, 243);
+            txtCameraLog.Size = new Size(373, 220);
             txtCameraLog.TabIndex = 0;
             // 
             // grpRobot
             // 
             grpRobot.Controls.Add(txtRobotLog);
-            grpRobot.Location = new Point(846, 40);
+            grpRobot.Location = new Point(1025, 40);
             grpRobot.Name = "grpRobot";
-            grpRobot.Size = new Size(325, 294);
+            grpRobot.Size = new Size(448, 268);
             grpRobot.TabIndex = 1;
             grpRobot.TabStop = false;
             grpRobot.Text = "Controller Component";
             // 
             // txtRobotLog
             // 
+            txtRobotLog.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             txtRobotLog.Location = new Point(24, 33);
             txtRobotLog.Multiline = true;
             txtRobotLog.Name = "txtRobotLog";
             txtRobotLog.ReadOnly = true;
             txtRobotLog.ScrollBars = ScrollBars.Vertical;
-            txtRobotLog.Size = new Size(267, 243);
+            txtRobotLog.Size = new Size(405, 220);
             txtRobotLog.TabIndex = 1;
             // 
             // grpConnector
             // 
             grpConnector.Controls.Add(txtConnectorLog);
-            grpConnector.Location = new Point(420, 73);
+            grpConnector.Location = new Point(530, 40);
             grpConnector.Name = "grpConnector";
-            grpConnector.Size = new Size(371, 185);
+            grpConnector.Size = new Size(434, 204);
             grpConnector.TabIndex = 2;
             grpConnector.TabStop = false;
             grpConnector.Text = "Connector";
             // 
             // txtConnectorLog
             // 
+            txtConnectorLog.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             txtConnectorLog.Location = new Point(20, 35);
             txtConnectorLog.Multiline = true;
             txtConnectorLog.Name = "txtConnectorLog";
             txtConnectorLog.ReadOnly = true;
             txtConnectorLog.ScrollBars = ScrollBars.Vertical;
-            txtConnectorLog.Size = new Size(345, 144);
+            txtConnectorLog.Size = new Size(393, 154);
             txtConnectorLog.TabIndex = 0;
             // 
             // btnStartSystem
             // 
             btnStartSystem.Font = new Font("Segoe UI", 12F);
-            btnStartSystem.Location = new Point(479, 275);
+            btnStartSystem.Location = new Point(602, 267);
             btnStartSystem.Name = "btnStartSystem";
             btnStartSystem.Size = new Size(128, 41);
             btnStartSystem.TabIndex = 3;
@@ -114,21 +121,41 @@
             // 
             // btnEndSystem
             // 
+            btnEndSystem.Enabled = false;
             btnEndSystem.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            btnEndSystem.Location = new Point(645, 275);
+            btnEndSystem.Location = new Point(778, 267);
             btnEndSystem.Name = "btnEndSystem";
             btnEndSystem.Size = new Size(116, 41);
-            btnEndSystem.Enabled = false;
             btnEndSystem.TabIndex = 4;
             btnEndSystem.Text = "End";
             btnEndSystem.UseVisualStyleBackColor = true;
             btnEndSystem.Click += btnEndSystem_Click;
             // 
+            // grpDb
+            // 
+            grpDb.Controls.Add(dgvLogs);
+            grpDb.Location = new Point(49, 334);
+            grpDb.Name = "grpDb";
+            grpDb.Size = new Size(915, 191);
+            grpDb.TabIndex = 5;
+            grpDb.TabStop = false;
+            grpDb.Text = "Database";
+            // 
+            // dgvLogs
+            // 
+            dgvLogs.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvLogs.Location = new Point(19, 22);
+            dgvLogs.Name = "dgvLogs";
+            dgvLogs.ReadOnly = true;
+            dgvLogs.Size = new Size(875, 150);
+            dgvLogs.TabIndex = 0;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1218, 392);
+            ClientSize = new Size(1485, 537);
+            Controls.Add(grpDb);
             Controls.Add(btnEndSystem);
             Controls.Add(btnStartSystem);
             Controls.Add(grpConnector);
@@ -142,6 +169,8 @@
             grpRobot.PerformLayout();
             grpConnector.ResumeLayout(false);
             grpConnector.PerformLayout();
+            grpDb.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dgvLogs).EndInit();
             ResumeLayout(false);
         }
 
@@ -155,5 +184,7 @@
         private TextBox txtConnectorLog;
         private Button btnStartSystem;
         private Button btnEndSystem;
+        private GroupBox grpDb;
+        private DataGridView dgvLogs;
     }
 }

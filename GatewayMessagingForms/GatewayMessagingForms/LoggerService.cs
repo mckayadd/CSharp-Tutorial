@@ -9,11 +9,11 @@ public enum LogCategory { Camera, Connector, Robot }
 public class LoggerService
 {
     public event Action<string, LogCategory> OnLogRequest;
-    private readonly DatabaseManager _dbManager;
+    public DatabaseManager DbManager { get; }
 
     public LoggerService()
     {
-        _dbManager = new DatabaseManager();
+        DbManager = new DatabaseManager();
     }
     public void Log(string message, LogCategory category)
     {  
@@ -21,7 +21,7 @@ public class LoggerService
         OnLogRequest?.Invoke(message, category);
 
         // Save message into the DB (saving in the background for improved performance)
-        Task.Run(() => _dbManager.SaveLog(message, category.ToString()));
+        Task.Run(() => DbManager.SaveLog(message, category.ToString()));
     }
 
 }
