@@ -21,6 +21,35 @@
                 </ModelVisual3D.Content>
             </ModelVisual3D>
 
+
+            <ModelVisual3D>
+                <ModelVisual3D.Content>
+                    <GeometryModel3D>
+                        <GeometryModel3D.Geometry>
+                            <MeshGeometry3D Positions="-5,-1.1,-5 5,-1.1,-5 5,-1.1,5 -5,-1.1,5"
+                                TriangleIndices="0 2 1 0 3 2" 
+                                TextureCoordinates="0,0 10,0 10,10 0,10"/>
+                        </GeometryModel3D.Geometry>
+                        <GeometryModel3D.Material>
+                            <MaterialGroup>
+                                <DiffuseMaterial Brush="Transparent" />
+                                <EmissiveMaterial>
+                                    <EmissiveMaterial.Brush>
+                                        <VisualBrush TileMode="Tile" Viewport="0,0,0.1,0.1">
+                                            <VisualBrush.Visual>
+                                                <Grid Width="100" Height="100">
+                                                    <Border BorderBrush="Gray" BorderThickness="1" Background="#10FFFFFF"/>
+                                                </Grid>
+                                            </VisualBrush.Visual>
+                                        </VisualBrush>
+                                    </EmissiveMaterial.Brush>
+                                </EmissiveMaterial>
+                            </MaterialGroup>
+                        </GeometryModel3D.Material>
+                    </GeometryModel3D>
+                </ModelVisual3D.Content>
+            </ModelVisual3D>
+
             <ModelVisual3D>
                 <ModelVisual3D.Content>
                     <GeometryModel3D>
@@ -44,11 +73,13 @@
                     Value="{Binding Scale}" 
                     TickFrequency="0.1" 
                     IsSnapToTickEnabled="True" />
+            <TextBlock Text="{Binding Scale, StringFormat={}{0:F1}}" Foreground="OrangeRed" Margin="0,0,0,15" FontWeight="Bold"/>
 
             <TextBlock Text="Camera Distance (Zoom)" Foreground="White" Margin="0,15,0,5"/>
             <Slider Minimum="2" 
                     Maximum="15" 
                     Value="{Binding CameraDistance}" />
+            <TextBlock Text="{Binding CameraDistance, StringFormat={}{0:F1}}" Foreground="OrangeRed" Margin="0,0,0,15" FontWeight="Bold"/>
 
             <Button Content="Change Color"
                     Margin="10"
