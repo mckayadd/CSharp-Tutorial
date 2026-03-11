@@ -10,6 +10,12 @@ namespace RobotCubeWPF.ViewModels;
 
 public partial class MainViewModel : ObservableObject
 {
+
+    public MainViewModel()
+    {
+
+    }
+
     // Manage cube's color
     [ObservableProperty]
     private Brush _cubeColor = Brushes.Orange;
@@ -17,6 +23,11 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CubePositions))] // Trigger CubePositions when scale changes
     private float _scale = 1.0f; // default size
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CameraPosition))]
+    private double _cameraDistance = 7.0; // default distance
+
 
     [RelayCommand] // In xaml, bind with ChangeColorCommand. usage of RelayCommand...
     private void ChangeColor()
@@ -79,11 +90,12 @@ public partial class MainViewModel : ObservableObject
     public Int32Collection CubeIndices =>
         new Int32Collection(_cubeIndicesA);
 
+    // property to calculate camera position:
+    // zoom in/out for (X, Y, Z) axes equally when distance changes 
+    public Point3D CameraPosition => new Point3D(CameraDistance, CameraDistance, CameraDistance);
 
-    public MainViewModel()
-    {
-
-    }
+    // Camera direction (always towards center/cube)
+    public Vector3D CameraLookDirection => new Vector3D(-1, -1, -1);
 
 
 }

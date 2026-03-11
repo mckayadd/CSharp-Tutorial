@@ -12,7 +12,7 @@
     <Grid Background="#252525">
         <Viewport3D>
             <Viewport3D.Camera>
-                <PerspectiveCamera Position="4, 4, 4" LookDirection="-1, -1, -1" UpDirection="0, 1, 0" FieldOfView="45" />
+                <PerspectiveCamera Position="{Binding CameraPosition}" LookDirection="{Binding CameraLookDirection}" UpDirection="0, 1, 0" FieldOfView="45" />
             </Viewport3D.Camera>
 
             <ModelVisual3D>
@@ -40,10 +40,15 @@
 
             <TextBlock Text="Cube Size (Scale)" Foreground="White" Margin="0,0,0,5"/>
             <Slider Minimum="0.1" 
-                Maximum="2.0" 
-                Value="{Binding Scale}" 
-                TickFrequency="0.1" 
-                IsSnapToTickEnabled="True" />
+                    Maximum="3.0" 
+                    Value="{Binding Scale}" 
+                    TickFrequency="0.1" 
+                    IsSnapToTickEnabled="True" />
+
+            <TextBlock Text="Camera Distance (Zoom)" Foreground="White" Margin="0,15,0,5"/>
+            <Slider Minimum="2" 
+                    Maximum="15" 
+                    Value="{Binding CameraDistance}" />
 
             <Button Content="Change Color"
                     Margin="10"
