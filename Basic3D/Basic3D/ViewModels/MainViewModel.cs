@@ -4,6 +4,8 @@ using RobotCubeWPF.Models;
 using System.Numerics;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
+using System.Windows;
+using System.Windows.Input;
 
 
 namespace RobotCubeWPF.ViewModels;
@@ -28,6 +30,17 @@ public partial class MainViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(CameraPosition))]
     private double _cameraDistance = 7.0; // default distance
 
+    private Point _lastMousePosition;
+    private bool _isMouseDown;
+
+    [ObservableProperty]
+    private double _rotationX = 0;
+    
+    [ObservableProperty]
+    private double _rotationY = 0;
+    
+    //[ObservableProperty]
+    //private double _rotationZ = 0;
 
     [RelayCommand] // In xaml, bind with ChangeColorCommand. usage of RelayCommand...
     private void ChangeColor()
@@ -59,7 +72,6 @@ public partial class MainViewModel : ObservableObject
         }
     }
 
-    [ObservableProperty]
     private int[] _cubeIndicesA =
     {
         // Front face (Z = +1)
@@ -97,5 +109,36 @@ public partial class MainViewModel : ObservableObject
     // Camera direction (always towards center/cube)
     public Vector3D CameraLookDirection => new Vector3D(-1, -1, -1);
 
+
+    // cube rotation
+    [RelayCommand]
+    private void OnMouseDown(MouseEventArgs e)
+    {
+        _isMouseDown = true;
+        _lastMousePosition = e.GetPosition(null); // position based on the window
+        (e.Source as UIElement)?.CaptureMouse();
+    }
+
+    [RelayCommand]
+    private void OnMouseMove(MouseEventArgs e)
+    {
+        if (!_isMouseDown) return;
+
+        Point currentPos = e.GetPosition(null);
+        double deltaX = currentPos.X - _lastMousePosition.X;
+        double deltaY = currentPos.Y - _lastMousePosition.Y;
+
+        RotationY += deltaX; // Yatay hareket Y ekseninde döndürür
+        RotationX += deltaY; // Dikey hareket X ekseninde döndürür
+
+        _lastMousePosition = currentPos;
+    }
+
+    [RelayCommand]
+    private void OnMouseUp(MouseEventArgs e)
+    {
+        _isMouseDown = false;
+        (e.Source as UIElement)?.ReleaseMouseCapture();
+    }
 
 }
