@@ -14,6 +14,10 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private Brush _cubeColor = Brushes.Orange;
 
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CubePositions))] // Trigger CubePositions when scale changes
+    private float _scale = 1.0f; // default size
+
     [RelayCommand] // In xaml, bind with ChangeColorCommand. usage of RelayCommand...
     private void ChangeColor()
     {
@@ -34,10 +38,15 @@ public partial class MainViewModel : ObservableObject
         new Vector3(-1,  1, -1), // Back-Top-Left
     };
 
-    public Point3DCollection CubePositions =>
-        new Point3DCollection(
-            _cubePositionsV3.Select(v => new Point3D(v.X, v.Y, v.Z))
-        );
+    public Point3DCollection CubePositions
+    {
+        get
+        {
+            return new Point3DCollection(
+                _cubePositionsV3.Select(v => new Point3D(v.X * Scale, v.Y * Scale, v.Z * Scale))
+                );
+        }
+    }
 
     [ObservableProperty]
     private int[] _cubeIndicesA =

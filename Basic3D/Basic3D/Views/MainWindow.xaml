@@ -37,7 +37,16 @@
         </Viewport3D>
 
         <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="20">
+
+            <TextBlock Text="Cube Size (Scale)" Foreground="White" Margin="0,0,0,5"/>
+            <Slider Minimum="0.1" 
+                Maximum="2.0" 
+                Value="{Binding Scale}" 
+                TickFrequency="0.1" 
+                IsSnapToTickEnabled="True" />
+
             <Button Content="Change Color"
+                    Margin="10"
                     Command="{Binding ChangeColorCommand}"
                     Padding="10,5"
                     Background="DimGray"
