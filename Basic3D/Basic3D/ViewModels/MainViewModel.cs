@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using RobotCubeWPF.Models;
 using System.Numerics;
 using System.Windows.Media;
@@ -13,7 +14,13 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private Brush _cubeColor = Brushes.Orange;
 
-    
+    [RelayCommand] // In xaml, bind with ChangeColorCommand. usage of RelayCommand...
+    private void ChangeColor()
+    {
+        // Orange <-> Blue
+        CubeColor = (CubeColor == Brushes.Orange) ? Brushes.SkyBlue : Brushes.Orange;
+    }
+
     private Vector3[] _cubePositionsV3 =
     {
         new Vector3(-1, -1,  1), // Front-Bottom-Left

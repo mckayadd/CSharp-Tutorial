@@ -35,5 +35,15 @@
                 </ModelVisual3D.Content>
             </ModelVisual3D>
         </Viewport3D>
+
+        <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="20">
+            <Button Content="Change Color"
+                    Command="{Binding ChangeColorCommand}"
+                    Padding="10,5"
+                    Background="DimGray"
+                    Foreground="White"/>
+
+        </StackPanel>
+
     </Grid>
 </Window>
